@@ -7,9 +7,9 @@ function love.load()
     titleFont = love.graphics.newFont(30)
     
     -- Carregar imagens
-    background = love.graphics.newImage("imagens/fundo.jpg")
-    nave = {x = 400, y = 300, angle = 0, speed = 0, img = love.graphics.newImage("imagens/Nave.png")}
-    asteroidImg = love.graphics.newImage("imagens/asteroide2.png")
+    background = love.graphics.newImage("assets/imagens/fundo.jpg")
+    nave = {x = 400, y = 300, angle = 0, speed = 0, img = love.graphics.newImage("assets/imagens/Nave.png")}
+    asteroidImg = love.graphics.newImage("assets/imagens/asteroide2.png")
     
     -- Configurações da nave
     acceleration = 100
@@ -54,6 +54,27 @@ function love.draw()
         love.graphics.draw(background, 0, 0)
         love.graphics.printf("GAME OVER", 0, love.graphics.getHeight()/3, love.graphics.getWidth(), "center")
         love.graphics.printf("Press R to restart", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
+    end
+
+    if gameState == "playing" then
+        love.graphics.draw(background, 0, 0)
+        love.graphics.draw(nave.img, nave.x, nave.y, nave.angle, 1, 1, nave.img:getWidth()/2, nave.img:getHeight()/2)
+        
+        -- Desenhar tiros
+        for _, bullet in ipairs(bullets) do
+            love.graphics.circle("fill", bullet.x, bullet.y, 3)
+        end
+        
+        -- Desenhar asteroides
+        drawAsteroids()
+
+        -- Desenhar pontuação e vidas
+        love.graphics.print("Score: " .. score, 10, 10)
+        love.graphics.print("Lives: " .. lives, 10, 30)
+    elseif gameState == "gameover" then
+        love.graphics.printf("GAME OVER", 0, love.graphics.getHeight()/3, love.graphics.getWidth(), "center")
+        love.graphics.printf("Final Score: " .. score, 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
+        love.graphics.printf("Press R to restart", 0, love.graphics.getHeight()/1.5, love.graphics.getWidth(), "center")
     end
 end
 
@@ -181,6 +202,15 @@ function checkBulletCollision()
         for j, asteroid in ipairs(asteroids) do
             local distance = math.sqrt((bullet.x - asteroid.x)^2 + (bullet.y - asteroid.y)^2)
             if distance < asteroid.size / 2 then
+                -- Adicionar pontuação de acordo com o tamanho do asteroide
+                if asteroid.size == 120 then
+                    score = score + 20
+                elseif asteroid.size == 60 then
+                    score = score + 50
+                elseif asteroid.size == 30 then
+                    score = score + 100
+                end
+                
                 -- Remover o tiro
                 table.remove(bullets, i)
 
@@ -189,13 +219,19 @@ function checkBulletCollision()
                     local newSize = asteroid.size / 2
                     table.insert(asteroids, {x = asteroid.x, y = asteroid.y, size = newSize, dx = math.random(-50, 50), dy = math.random(-50, 50), angle = math.random(0, 2*math.pi), rotationSpeed = math.random(-1, 1)})
                     table.insert(asteroids, {x = asteroid.x, y = asteroid.y, size = newSize, dx = math.random(-50, 50), dy = math.random(-50, 50), angle = math.random(0, 2*math.pi), rotationSpeed = math.random(-1, 1)})
+                else
+                    -- Quando um asteroide de tamanho 30 é destruído, outro de tamanho 120 ou 60 deve ser gerado
+                    spawnNewAsteroid()
                 end
+
+                -- Remover o asteroide destruído
                 table.remove(asteroids, j)
                 break
             end
         end
     end
 end
+
 
 function checkShipCollision()
     for _, asteroid in ipairs(asteroids) do
@@ -210,5 +246,18 @@ function checkShipCollision()
             end
         end
     end
+end
+
+function spawnNewAsteroid()
+    local newSize = math.random(1, 2) == 1 and 120 or 60
+    table.insert(asteroids, {
+        x = math.random(0, love.graphics.getWidth()),
+        y = math.random(0, love.graphics.getHeight()),
+        size = newSize,
+        dx = math.random(-50, 50),
+        dy = math.random(-50, 50),
+        angle = math.random(0, 2*math.pi),
+        rotationSpeed = math.random(-1, 1)
+    })
 end
 
