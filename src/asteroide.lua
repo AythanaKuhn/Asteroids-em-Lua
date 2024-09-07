@@ -7,7 +7,7 @@ function asteroide.atribuirTamanhoAleatorio()
 
     -- Atribui 50 se o número for 1, ou 170 se for 2
     if valorAleatorio == 1 then
-        return 50
+        return 60
     else
         return 120
     end
@@ -16,8 +16,8 @@ end
 -- Função para criar um novo asteroide
 function asteroide.criar()
     return {
-        x = math.random(0, largura),
-        y = math.random(0, altura),
+        x = math.random(0, Largura),
+        y = math.random(0, Altura),
         angulo = math.random() * 2 * math.pi,  -- Direção do movimento
         velocidade = math.random(50, 100),
         tamanho = asteroide.atribuirTamanhoAleatorio(),
@@ -35,10 +35,10 @@ function asteroide.atualizar(a, dt)
     a.rotacao = a.rotacao + a.rotacaoVelocidade * dt
 
     -- Mantém o asteroide dentro da tela
-    if a.x < 0 then a.x = largura end
-    if a.x > largura then a.x = 0 end
-    if a.y < 0 then a.y = altura end
-    if a.y > altura then a.y = 0 end
+    if a.x < 0 then a.x = Largura end
+    if a.x > Largura then a.x = 0 end
+    if a.y < 0 then a.y = Altura end
+    if a.y > Altura then a.y = 0 end
 end
 
 -- Função para desenhar o asteroide na tela

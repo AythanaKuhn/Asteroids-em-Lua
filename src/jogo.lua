@@ -1,22 +1,26 @@
--- src/jogo.lua
-
 local nave = require "src/nave"
 local asteroide = require "src/asteroide"
 
 local jogo = {}
+local asteroides = {}
+
+-- Variáveis de largura e altura
+local largura, altura
 
 -- Função para carregar os recursos e inicializar o jogo
 function jogo.carregar()
+    largura, altura = love.graphics.getWidth(), love.graphics.getHeight()  -- Obtém a largura e altura da janela
     nave.inicializar(largura, altura)
-    asteroides = {}
+    
+    asteroides = {}  -- Inicializa a tabela de asteroides
     for i = 1, 5 do
-        table.insert(asteroides, asteroide.criar())
+        table.insert(asteroides, asteroide.criar())  -- Cria 5 asteroides
     end
 end
 
 -- Função chamada a cada quadro para atualizar o estado do jogo
 function jogo.atualizar(dt)
-    nave.controlar(dt, largura, altura)
+    nave.controlar(dt, largura, altura, asteroides)  -- Passa a tabela de asteroides
     for i, a in ipairs(asteroides) do
         asteroide.atualizar(a, dt)
     end
