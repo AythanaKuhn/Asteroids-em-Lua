@@ -7,9 +7,9 @@ function love.load()
     titleFont = love.graphics.newFont(30)
     
     -- Carregar imagens
-    background = love.graphics.newImage("assets/imagens/fundo.jpg")
-    nave = {x = 400, y = 300, angle = 0, speed = 0, img = love.graphics.newImage("assets/imagens/Nave.png")}
-    asteroidImg = love.graphics.newImage("assets/imagens/asteroide2.png")
+    background = love.graphics.newImage("imagens/fundo.jpg")
+    nave = {x = 400, y = 300, angle = 0, speed = 0, img = love.graphics.newImage("imagens/Nave.png")}
+    asteroidImg = love.graphics.newImage("imagens/asteroide2.png")
     
     -- Configurações da nave
     acceleration = 100
@@ -125,8 +125,8 @@ function updateNave(dt)
     end
 
     -- Atualizar posição da nave
-    nave.x = nave.x + math.cos(nave.angle) * nave.speed * dt
-    nave.y = nave.y + math.sin(nave.angle) * nave.speed * dt
+    nave.x = nave.x + math.sin(nave.angle) * nave.speed * dt
+    nave.y = nave.y - math.cos(nave.angle) * nave.speed * dt
 
     -- Aplicar inércia
     nave.speed = nave.speed * friction
