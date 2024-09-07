@@ -146,7 +146,7 @@ function shootBullet()
     local bullet = {
         x = shipTipX,
         y = shipTipY,
-        dx = math.cos(nave.angle) * bulletSpeed,
+        dx = - math.cos(nave.angle) * bulletSpeed,
         dy = math.sin(nave.angle) * bulletSpeed
     }
     table.insert(bullets, bullet)
