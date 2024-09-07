@@ -27,4 +27,3 @@ function tela_inicial.desenhar()
 end
 
 return tela_inicial
-
