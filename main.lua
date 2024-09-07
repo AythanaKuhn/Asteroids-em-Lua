@@ -58,7 +58,7 @@ function love.draw()
 
         -- Desenhar pontuação e vidas
         love.graphics.print("Score: " .. score, 10, 10)
-        love.graphics.print("Lives: " .. lives, 10, 30)
+        love.graphics.print("Vidas: " .. lives, 10, 40)
     elseif gameState == "gameover" then
         love.graphics.printf("GAME OVER", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
         love.graphics.printf("Final Score: " .. score, 0, 200, love.graphics.getWidth(), "center")
@@ -225,7 +225,7 @@ function checkBulletCollision()
                     })
                 else
                     -- Verificar se o número de asteroides na tela é menor que 5 antes de gerar um novo asteroide
-                    if #asteroids < 5 then
+                    if #asteroids < 10 then
                         spawnLargeAsteroid()
                     end
                 end
