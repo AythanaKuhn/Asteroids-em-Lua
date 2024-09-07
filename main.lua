@@ -100,7 +100,7 @@ function love.keypressed(key)
     if gameState == "start" and key == "space" then
         gameState = "playing"
     elseif gameState == "gameover" and key == "r" then
-        gameState = "start"
+        gameState = "playing"
         -- Resetar o jogo
         score = 0
         lives = 3
