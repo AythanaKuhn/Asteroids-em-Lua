@@ -52,8 +52,6 @@ function love.draw()
         love.graphics.print("Lives: " .. lives, 10, 30)
     elseif gameState == "gameover" then
         love.graphics.draw(background, 0, 0)
-        love.graphics.printf("GAME OVER", 0, love.graphics.getHeight()/3, love.graphics.getWidth(), "center")
-        love.graphics.printf("Press R to restart", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
     end
 
     if gameState == "playing" then
@@ -72,8 +70,8 @@ function love.draw()
         love.graphics.print("Score: " .. score, 10, 10)
         love.graphics.print("Lives: " .. lives, 10, 30)
     elseif gameState == "gameover" then
-        love.graphics.printf("GAME OVER", 0, love.graphics.getHeight()/3, love.graphics.getWidth(), "center")
-        love.graphics.printf("Final Score: " .. score, 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
+        love.graphics.printf("GAME OVER", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
+        love.graphics.printf("Final Score: " .. score, 0, 200, love.graphics.getWidth(), "center")
         love.graphics.printf("Press R to restart", 0, love.graphics.getHeight()/1.5, love.graphics.getWidth(), "center")
     end
 end
@@ -102,7 +100,7 @@ function love.keypressed(key)
     if gameState == "start" and key == "space" then
         gameState = "playing"
     elseif gameState == "gameover" and key == "r" then
-        gameState = "start"
+        gameState = "playing"
         -- Resetar o jogo
         score = 0
         lives = 3
@@ -140,18 +138,17 @@ end
 
 -- Função para atirar
 function shootBullet()
-    local shipTipX = nave.x + math.cos(nave.angle) * (nave.img:getHeight()/2)
-    local shipTipY = nave.y + math.sin(nave.angle) * (nave.img:getHeight()/2)
+    local shipTipX = nave.x + math.cos(nave.angle - math.pi/2) * (nave.img:getHeight()/2)
+    local shipTipY = nave.y + math.sin(nave.angle - math.pi/2) * (nave.img:getHeight()/2)
 
     local bullet = {
         x = shipTipX,
         y = shipTipY,
-        dx = math.cos(nave.angle) * bulletSpeed,
-        dy = math.sin(nave.angle) * bulletSpeed
+        dx = math.cos(nave.angle - math.pi/2) * bulletSpeed,
+        dy = math.sin(nave.angle - math.pi/2) * bulletSpeed
     }
     table.insert(bullets, bullet)
 end
-
 
 -- Função para atualizar os tiros
 function updateBullets(dt)
