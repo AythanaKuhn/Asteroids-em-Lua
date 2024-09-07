@@ -138,18 +138,17 @@ end
 
 -- Função para atirar
 function shootBullet()
-    local shipTipX = nave.x + math.cos(nave.angle) * (nave.img:getHeight()/2)
-    local shipTipY = nave.y + math.sin(nave.angle) * (nave.img:getHeight()/2)
+    local shipTipX = nave.x + math.cos(nave.angle - math.pi/2) * (nave.img:getHeight()/2)
+    local shipTipY = nave.y + math.sin(nave.angle - math.pi/2) * (nave.img:getHeight()/2)
 
     local bullet = {
         x = shipTipX,
         y = shipTipY,
-        dx = math.cos(nave.angle) * bulletSpeed,
-        dy = math.sin(nave.angle) * bulletSpeed
+        dx = math.cos(nave.angle - math.pi/2) * bulletSpeed,
+        dy = math.sin(nave.angle - math.pi/2) * bulletSpeed
     }
     table.insert(bullets, bullet)
 end
-
 
 -- Função para atualizar os tiros
 function updateBullets(dt)
