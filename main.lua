@@ -29,6 +29,7 @@ function love.load()
 end
 
 -- Função de desenhar na tela
+-- Função de desenhar na tela
 function love.draw()
     if gameState == "start" then
         love.graphics.draw(background, 0, 0)
@@ -39,28 +40,17 @@ function love.draw()
         love.graphics.draw(background, 0, 0)
         love.graphics.draw(nave.img, nave.x, nave.y, nave.angle, 1, 1, nave.img:getWidth()/2, nave.img:getHeight()/2)
         
-        -- Desenhar tiros
+        -- Desenhar tiros como linhas
         for _, bullet in ipairs(bullets) do
-            love.graphics.circle("fill", bullet.x, bullet.y, 3)
-        end
-        
-        -- Desenhar asteroides
-        drawAsteroids()
+            -- Comprimento da linha do tiro
+            local bulletLength = 7
 
-        -- Desenhar pontuação e vidas
-        love.graphics.print("Score: " .. score, 10, 10)
-        love.graphics.print("Lives: " .. lives, 10, 30)
-    elseif gameState == "gameover" then
-        love.graphics.draw(background, 0, 0)
-    end
+            -- Calcular o ponto final da linha com base na direção do tiro
+            local endX = bullet.x + bullet.dx * (bulletLength / bulletSpeed)
+            local endY = bullet.y + bullet.dy * (bulletLength / bulletSpeed)
 
-    if gameState == "playing" then
-        love.graphics.draw(background, 0, 0)
-        love.graphics.draw(nave.img, nave.x, nave.y, nave.angle, 1, 1, nave.img:getWidth()/2, nave.img:getHeight()/2)
-        
-        -- Desenhar tiros
-        for _, bullet in ipairs(bullets) do
-            love.graphics.circle("fill", bullet.x, bullet.y, 3)
+            -- Desenhar a linha do tiro
+            love.graphics.line(bullet.x, bullet.y, endX, endY)
         end
         
         -- Desenhar asteroides
@@ -75,6 +65,7 @@ function love.draw()
         love.graphics.printf("Press R to restart", 0, love.graphics.getHeight()/1.5, love.graphics.getWidth(), "center")
     end
 end
+
 
 -- Função de movimentação e lógica do jogo
 function love.update(dt)
