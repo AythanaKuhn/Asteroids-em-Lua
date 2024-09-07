@@ -247,9 +247,32 @@ end
 
 function spawnNewAsteroid()
     local newSize = math.random(1, 2) == 1 and 120 or 60
+    local corner = math.random(1, 4)  -- Escolhe um dos 4 cantos da tela
+
+    local x, y
+
+    -- Definir posição baseada no canto escolhido
+    if corner == 1 then
+        -- Canto superior esquerdo
+        x = math.random(0, love.graphics.getWidth() * 0.1)
+        y = math.random(0, love.graphics.getHeight() * 0.1)
+    elseif corner == 2 then
+        -- Canto superior direito
+        x = math.random(love.graphics.getWidth() * 0.9, love.graphics.getWidth())
+        y = math.random(0, love.graphics.getHeight() * 0.1)
+    elseif corner == 3 then
+        -- Canto inferior esquerdo
+        x = math.random(0, love.graphics.getWidth() * 0.1)
+        y = math.random(love.graphics.getHeight() * 0.9, love.graphics.getHeight())
+    elseif corner == 4 then
+        -- Canto inferior direito
+        x = math.random(love.graphics.getWidth() * 0.9, love.graphics.getWidth())
+        y = math.random(love.graphics.getHeight() * 0.9, love.graphics.getHeight())
+    end
+
     table.insert(asteroids, {
-        x = math.random(0, love.graphics.getWidth()),
-        y = math.random(0, love.graphics.getHeight()),
+        x = x,
+        y = y,
         size = newSize,
         dx = math.random(-50, 50),
         dy = math.random(-50, 50),
