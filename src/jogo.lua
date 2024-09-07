@@ -11,6 +11,7 @@ local largura, altura
 function jogo.carregar()
     largura, altura = love.graphics.getWidth(), love.graphics.getHeight()  -- Obtém a largura e altura da janela
     nave.inicializar(largura, altura)
+    fundo = love.graphics.newImage("/assets/imagens/fundo.jpg")
     
     asteroides = {}  -- Inicializa a tabela de asteroides
     for i = 1, 5 do
@@ -28,6 +29,7 @@ end
 
 -- Função para desenhar os elementos do jogo na tela
 function jogo.desenhar()
+    love.graphics.draw(fundo,0,0)
     nave.desenhar()
     for i, a in ipairs(asteroides) do
         asteroide.desenhar(a)
