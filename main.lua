@@ -214,11 +214,29 @@ function checkBulletCollision()
                 -- Dividir asteroide ou remover se for pequeno
                 if asteroid.size > 30 then
                     local newSize = asteroid.size / 2
-                    table.insert(asteroids, {x = asteroid.x, y = asteroid.y, size = newSize, dx = math.random(-50, 50), dy = math.random(-50, 50), angle = math.random(0, 2*math.pi), rotationSpeed = math.random(-1, 1)})
-                    table.insert(asteroids, {x = asteroid.x, y = asteroid.y, size = newSize, dx = math.random(-50, 50), dy = math.random(-50, 50), angle = math.random(0, 2*math.pi), rotationSpeed = math.random(-1, 1)})
+                    table.insert(asteroids, {
+                        x = asteroid.x, 
+                        y = asteroid.y, 
+                        size = newSize, 
+                        dx = math.random(-50, 50), 
+                        dy = math.random(-50, 50), 
+                        angle = math.random(0, 2 * math.pi), 
+                        rotationSpeed = math.random(-1, 1)
+                    })
+                    table.insert(asteroids, {
+                        x = asteroid.x, 
+                        y = asteroid.y, 
+                        size = newSize, 
+                        dx = math.random(-50, 50), 
+                        dy = math.random(-50, 50), 
+                        angle = math.random(0, 2 * math.pi), 
+                        rotationSpeed = math.random(-1, 1)
+                    })
                 else
-                    -- Quando um asteroide de tamanho 30 é destruído, outro de tamanho 120 ou 60 deve ser gerado
-                    spawnNewAsteroid()
+                    -- Verificar se o número de asteroides na tela é menor que 5 antes de gerar um novo asteroide
+                    if #asteroids < 5 then
+                        spawnLargeAsteroid()
+                    end
                 end
 
                 -- Remover o asteroide destruído
@@ -243,6 +261,44 @@ function checkShipCollision()
             end
         end
     end
+end
+
+
+
+function spawnLargeAsteroid()
+    local size = 120  -- Tamanho fixo para asteroides grandes
+    local corner = math.random(1, 4)  -- Escolhe um dos 4 cantos da tela
+
+    local x, y
+
+    -- Definir posição baseada no canto escolhido
+    if corner == 1 then
+        -- Canto superior esquerdo
+        x = math.random(0, love.graphics.getWidth() * 0.1)
+        y = math.random(0, love.graphics.getHeight() * 0.1)
+    elseif corner == 2 then
+        -- Canto superior direito
+        x = math.random(love.graphics.getWidth() * 0.9, love.graphics.getWidth())
+        y = math.random(0, love.graphics.getHeight() * 0.1)
+    elseif corner == 3 then
+        -- Canto inferior esquerdo
+        x = math.random(0, love.graphics.getWidth() * 0.1)
+        y = math.random(love.graphics.getHeight() * 0.9, love.graphics.getHeight())
+    elseif corner == 4 then
+        -- Canto inferior direito
+        x = math.random(love.graphics.getWidth() * 0.9, love.graphics.getWidth())
+        y = math.random(love.graphics.getHeight() * 0.9, love.graphics.getHeight())
+    end
+
+    table.insert(asteroids, {
+        x = x,
+        y = y,
+        size = size,  -- Definido como 120 para garantir que seja grande
+        dx = math.random(-50, 50),
+        dy = math.random(-50, 50),
+        angle = math.random(0, 2 * math.pi),
+        rotationSpeed = math.random(-1, 1)
+    })
 end
 
 function spawnNewAsteroid()
@@ -280,6 +336,3 @@ function spawnNewAsteroid()
         rotationSpeed = math.random(-1, 1)
     })
 end
-
-
-print("foi")
