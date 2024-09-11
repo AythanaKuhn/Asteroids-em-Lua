@@ -23,6 +23,9 @@ function love.load()
     asteroids = {}
     spawnAsteroids()
 
+    -- COntrole
+    joysticks = love.joystick.getJoysticks()
+
     -- Pontuação e vidas
     score = 0
     lives = 3
@@ -35,7 +38,7 @@ function love.draw()
         love.graphics.draw(background, 0, 0)
         love.graphics.setFont(titleFont)
         love.graphics.printf("ASTEROIDS", 0, love.graphics.getHeight()/3, love.graphics.getWidth(), "center")
-        love.graphics.printf("Press SPACE to start", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
+        love.graphics.printf("Pressione START / ESPAÇO\npara jogar", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
     elseif gameState == "playing" then
         love.graphics.draw(background, 0, 0)
         love.graphics.draw(nave.img, nave.x, nave.y, nave.angle, 1, 1, nave.img:getWidth()/2, nave.img:getHeight()/2)
@@ -61,8 +64,8 @@ function love.draw()
         love.graphics.print("Vidas: " .. lives, 10, 40)
     elseif gameState == "gameover" then
         love.graphics.printf("GAME OVER", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
-        love.graphics.printf("Final Score: " .. score, 0, 200, love.graphics.getWidth(), "center")
-        love.graphics.printf("Press R to restart", 0, love.graphics.getHeight()/1.5, love.graphics.getWidth(), "center")
+        love.graphics.printf("Pontuação Final: " .. score, 0, 200, love.graphics.getWidth(), "center")
+        love.graphics.printf("Pressione R / START\npara recomeçar", 0, love.graphics.getHeight()/1.5, love.graphics.getWidth(), "center")
     end
 end
 
@@ -96,13 +99,28 @@ function love.keypressed(key)
         score = 0
         lives = 3
         spawnAsteroids()
-    elseif gameState == "playing" and key == "space" then
+    elseif gameState == "playing" and (key == "space") then
+        shootBullet()
+    end
+end
+
+function love.gamepadpressed(joystick, button)
+    if gameState == "start" and button == "start" then
+        gameState = "playing"
+    elseif gameState == "gameover" and button == "start" then
+        gameState = "playing"
+        -- Resetar o jogo
+        score = 0
+        lives = 3
+        spawnAsteroids()
+    elseif gameState == "playing" and (button == "x" or button == "rightshoulder") then
         shootBullet()
     end
 end
 
 -- Função para atualizar a nave
 function updateNave(dt)
+    -- Controle via teclado
     if love.keyboard.isDown("up") then
         nave.speed = nave.speed + acceleration * dt
     end
@@ -113,9 +131,28 @@ function updateNave(dt)
         nave.angle = nave.angle + 2 * dt
     end
 
+
+-- Controle via joystick, se houver um conectado
+    if #joysticks > 0 then
+        local joystick = joysticks[1] -- Usar o primeiro joystick conectado
+        
+        -- Analógico esquerdo controla a rotação e a aceleração
+        local leftX = joystick:getAxis(2) -- Eixo X do analógico esquerdo (girar nave)
+        local leftY = joystick:getAxis(1) -- Eixo Y do analógico esquerdo (acelerar nave)
+        
+        -- Verifica se o analógico está sendo movido (fora da zona morta)
+        if math.abs(leftX) > 0.2 or math.abs(leftY) > 0.2 then
+            -- Calcular o ângulo baseado no analógico esquerdo (ângulo de direção)
+            nave.angle = math.atan2(leftY, -leftX)  -- Corrigido para refletir a orientação correta
+            
+            -- Acelerar a nave na direção do analógico
+            nave.speed = nave.speed + acceleration * dt
+        end
+    end
+
     -- Atualizar posição da nave
-    nave.x = nave.x + math.sin(nave.angle) * nave.speed * dt
     nave.y = nave.y - math.cos(nave.angle) * nave.speed * dt
+    nave.x = nave.x + math.sin(nave.angle) * nave.speed * dt
 
     -- Aplicar inércia
     nave.speed = nave.speed * friction
