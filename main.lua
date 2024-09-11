@@ -8,7 +8,7 @@ function love.load()
     font2 = love.graphics.newFont("Retro Gaming.ttf", 24) -- Substitua com o caminho correto e o tamanho que preferir
     
     -- Carregar imagens
-    background = love.graphics.newImage("imagens/fundo.jpg")
+    background = love.graphics.newImage("imagens/fundo1.png")
     nave = {x = 400, y = 300, angle = 0, speed = 0, img = love.graphics.newImage("imagens/Nave.png")}
     asteroidImg = love.graphics.newImage("imagens/asteroide3.png")
     
@@ -32,7 +32,6 @@ function love.load()
     lives = 3
 end
 
--- Função de desenhar na tela
 -- Função de desenhar na tela
 function love.draw()
     if gameState == "start" then
