@@ -9,7 +9,7 @@ function love.load()
     -- Carregar imagens
     background = love.graphics.newImage("imagens/fundo.jpg")
     nave = {x = 400, y = 300, angle = 0, speed = 0, img = love.graphics.newImage("imagens/Nave.png")}
-    asteroidImg = love.graphics.newImage("imagens/asteroide2.png")
+    asteroidImg = love.graphics.newImage("imagens/asteroide3.png")
     
     -- Configurações da nave
     acceleration = 100
