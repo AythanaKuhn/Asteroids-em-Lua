@@ -8,10 +8,11 @@ function love.load()
     font2 = love.graphics.newFont("Retro Gaming.ttf", 24) -- Substitua com o caminho correto e o tamanho que preferir
     
     -- Carregar imagens
-    background = love.graphics.newImage("imagens/fundo1.png")
+    background = love.graphics.newImage("imagens/fundo.png")
     nave = {x = 400, y = 300, angle = 0, speed = 0, img = love.graphics.newImage("imagens/Nave.png")}
     asteroidImg = love.graphics.newImage("imagens/asteroide3.png")
-    
+    heart = love.graphics.newImage("imagens/vida.png")
+
     -- Configurações da nave
     acceleration = 100
     friction = 0.98
@@ -39,10 +40,23 @@ function love.draw()
         love.graphics.setFont(font2)
         love.graphics.printf("ASTEROIDS", 0, love.graphics.getHeight()/3, love.graphics.getWidth(), "center")
         love.graphics.printf("Pressione START / ESPAÇO\npara jogar", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
+    
     elseif gameState == "playing" then
         love.graphics.draw(background, 0, 0)
         love.graphics.draw(nave.img, nave.x, nave.y, nave.angle, 1, 1, nave.img:getWidth()/2, nave.img:getHeight()/2)
+        -- Desenhar corações de vida abaixo do score
+        local xStart = 15  -- Posição X inicial dos corações
+        local yStart = 50  -- Posição Y abaixo do score
         
+        if lives >= 1 then
+            love.graphics.draw(heart, xStart, yStart)
+        end
+        if lives >= 2 then
+            love.graphics.draw(heart, xStart + 40, yStart)
+        end
+        if lives >= 3 then
+            love.graphics.draw(heart, xStart + 80, yStart)
+        end
         -- Desenhar tiros como linhas
         for _, bullet in ipairs(bullets) do
             -- Comprimento da linha do tiro
@@ -61,12 +75,12 @@ function love.draw()
 
         -- Desenhar pontuação e vidas
         love.graphics.print("Score: " .. score, 10, 10)
-        love.graphics.print("Vidas: " .. lives, 10, 40)
     elseif gameState == "gameover" then
         love.graphics.printf("GAME OVER", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
         love.graphics.printf("Pontuação Final: " .. score, 0, 200, love.graphics.getWidth(), "center")
         love.graphics.printf("Pressione R / START\npara recomeçar", 0, love.graphics.getHeight()/1.5, love.graphics.getWidth(), "center")
     end
+
 end
 
 
