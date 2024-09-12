@@ -14,6 +14,8 @@ function love.load()
     heart = love.graphics.newImage("imagens/vida.png")
 
     -- Carregar Sons
+    musica = love.audio.newSource("sons/musica.mp3","stream")
+    musica:setVolume(0.2)
     laser = love.audio.newSource("sons/laser.wav","static")
     explosao = love.audio.newSource("sons/explosao.wav","static")
     vidaPerdida = love.audio.newSource("sons/vidaPerdida.mp3","static")
@@ -58,6 +60,7 @@ function love.draw()
         love.graphics.printf("Pressione START / ESPAÇO\npara jogar", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
     
     elseif gameState == "playing" then
+        musica:play()
         love.graphics.draw(background, 0, 0)
         love.graphics.draw(nave.img, nave.x, nave.y, nave.angle, 1, 1, nave.img:getWidth()/2, nave.img:getHeight()/2)
         -- Desenhar corações de vida abaixo do score
@@ -92,6 +95,7 @@ function love.draw()
         -- Desenhar pontuação e vidas
         love.graphics.print("Score: " .. score, 10, 10)
     elseif gameState == "gameover" then
+        musica:stop()
         love.graphics.printf("GAME OVER", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
         love.graphics.printf("Pontuação Final: " .. score, 0, 200, love.graphics.getWidth(), "center")
         love.graphics.printf("Pressione R / START\npara recomeçar", 0, love.graphics.getHeight()/1.5, love.graphics.getWidth(), "center")
