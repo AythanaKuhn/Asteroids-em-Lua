@@ -5,13 +5,14 @@ function love.load()
 
     -- Fonte para o título
     titleFont = love.graphics.newFont(30)
-    font2 = love.graphics.newFont("Retro Gaming.ttf", 24) -- Substitua com o caminho correto e o tamanho que preferir
+    font2 = love.graphics.newFont("Retro Gaming.ttf", 30) 
     
     -- Carregar imagens
     background = love.graphics.newImage("imagens/fundo.png")
     nave = {x = 400, y = 300, angle = 0, speed = 0, img = love.graphics.newImage("imagens/Nave.png")}
     asteroidImg = love.graphics.newImage("imagens/asteroide3.png")
     heart = love.graphics.newImage("imagens/vida.png")
+    titulo = love.graphics.newImage("imagens/titulo.png")
 
     -- Carregar Sons
     musica = love.audio.newSource("sons/musica.mp3","stream")
@@ -56,8 +57,9 @@ function love.draw()
     if gameState == "start" then
         love.graphics.draw(background, 0, 0)
         love.graphics.setFont(font2)
-        love.graphics.printf("ASTEROIDS", 0, love.graphics.getHeight()/3, love.graphics.getWidth(), "center")
-        love.graphics.printf("Pressione START / ESPAÇO\npara jogar", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
+    --    love.graphics.printf("ASTEROIDS", 0, love.graphics.getHeight()/3, love.graphics.getWidth(), "center")
+        love.graphics.draw(titulo, -25, -210, 0, 1.7, 1.7)
+        love.graphics.printf("Pressione START / ESPAÇO\npara jogar", 0, 350, love.graphics.getWidth(), "center")
     
     elseif gameState == "playing" then
         musica:play()
@@ -322,11 +324,12 @@ function checkBulletCollision()
                     })
                 else
                     -- Verificar se o número de asteroides na tela é menor que 5 antes de gerar um novo asteroide
-                    if #asteroids < 10 then
+                    if #asteroids < 15 then
+                        spawnLargeAsteroid()
                         spawnLargeAsteroid()
                     end
                 end
-
+ 
                 -- Remover o asteroide destruído
                 table.remove(asteroids, j)
                 break
