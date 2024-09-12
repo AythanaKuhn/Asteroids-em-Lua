@@ -13,6 +13,13 @@ function love.load()
     asteroidImg = love.graphics.newImage("imagens/asteroide3.png")
     heart = love.graphics.newImage("imagens/vida.png")
 
+    -- Carregar Sons
+    laser = love.audio.newSource("sons/laser.mp3","static")
+    laser:setPitch(1.8)
+    explosaoGrande = love.audio.newSource("sons/explosaoGrande.mp3","static")
+    explosaoPequena = love.audio.newSource("sons/explosaoPequena.mp3","static")
+    vidaPerdida = love.audio.newSource("sons/vidaPerdida.wav","static")
+
     -- Configurações da nave
     acceleration = 100
     friction = 0.98
@@ -180,6 +187,8 @@ end
 
 -- Função para atirar
 function shootBullet()
+    laser:play()
+
     local shipTipX = nave.x + math.cos(nave.angle - math.pi/2) * (nave.img:getHeight()/2)
     local shipTipY = nave.y + math.sin(nave.angle - math.pi/2) * (nave.img:getHeight()/2)
 
@@ -241,6 +250,8 @@ function checkBulletCollision()
         for j, asteroid in ipairs(asteroids) do
             local distance = math.sqrt((bullet.x - asteroid.x)^2 + (bullet.y - asteroid.y)^2)
             if distance < asteroid.size / 2 then
+
+                explosaoPequena:play()
                 -- Adicionar pontuação de acordo com o tamanho do asteroide
                 if asteroid.size == 120 then
                     score = score + 20
@@ -294,6 +305,8 @@ function checkShipCollision()
     for _, asteroid in ipairs(asteroids) do
         local distance = math.sqrt((nave.x - asteroid.x)^2 + (nave.y - asteroid.y)^2)
         if distance < asteroid.size / 2 then
+            vidaPerdida:play()
+
             lives = lives - 1
             nave.x, nave.y = love.graphics.getWidth()/2, love.graphics.getHeight()/2  -- Resetar nave ao centro
             nave.speed = 0
