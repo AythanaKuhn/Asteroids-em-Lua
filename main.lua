@@ -18,7 +18,8 @@ function love.load()
     laser:setPitch(1.8)
     explosaoGrande = love.audio.newSource("sons/explosaoGrande.mp3","static")
     explosaoPequena = love.audio.newSource("sons/explosaoPequena.mp3","static")
-    vidaPerdida = love.audio.newSource("sons/vidaPerdida.wav","static")
+    vidaPerdida = love.audio.newSource("sons/vidaPerdida.mp3","static")
+    gameOver = love.audio.newSource("sons/gameOver.wav","static")
 
     -- Configurações da nave
     acceleration = 100
@@ -38,6 +39,10 @@ function love.load()
     -- Pontuação e vidas
     score = 0
     lives = 3
+
+    shootCooldown = 0.25
+    timeSinceLastShot = shootCooldown
+    isShooting = false
 end
 
 -- Função de desenhar na tela
@@ -94,6 +99,14 @@ end
 -- Função de movimentação e lógica do jogo
 function love.update(dt)
     if gameState == "playing" then
+        timeSinceLastShot = timeSinceLastShot - dt
+
+        if love.keyboard.isDown("space") or isShooting then
+            if timeSinceLastShot <= 0 then
+            shootBullet()
+            timeSinceLastShot = shootCooldown
+            end
+        end
         -- Atualizar movimento da nave
         updateNave(dt)
 
@@ -134,8 +147,13 @@ function love.gamepadpressed(joystick, button)
         score = 0
         lives = 3
         spawnAsteroids()
-    elseif gameState == "playing" and (button == "x" or button == "rightshoulder") then
-        shootBullet()
+    elseif gameState == "playing" and (button == "a" or button == "rightshoulder") then
+        isShooting = true
+    end
+end
+
+function love.gamepadreleased(joystick, button)
+    if button == "a" then isShooting = false
     end
 end
 
@@ -219,7 +237,7 @@ function spawnAsteroids()
     asteroids = {}
     for i = 1, 5 do
         local size = math.random(1, 2) == 1 and 120 or 60
-        table.insert(asteroids, {x = math.random(0, love.graphics.getWidth()), y = math.random(0, love.graphics.getHeight()), size = size, dx = math.random(-50, 50), dy = math.random(-50, 50), angle = math.random(0, 2*math.pi), rotationSpeed = math.random(-1, 1)})
+        table.insert(asteroids, {x = math.random(0, love.graphics.getWidth()), y = math.random(0, love.graphics.getHeight()), size = size, dx = math.random(-100, 100), dy = math.random(-100, 100), angle = math.random(0, 2*math.pi), rotationSpeed = math.random(-1, 1)})
     end
 end
 
@@ -312,6 +330,7 @@ function checkShipCollision()
             nave.speed = 0
 
             if lives <= 0 then
+                gameOver:play()
                 gameState = "gameover"
             end
         end
