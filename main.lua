@@ -21,6 +21,12 @@ function love.load()
     vidaPerdida = love.audio.newSource("sons/vidaPerdida.mp3","static")
     gameOver = love.audio.newSource("sons/gameOver.wav","static")
 
+    -- Tempo de invulnerabilidade após perder uma vida
+    invulnerabilityTime = 2 -- Tempo em segundos
+    invulnerable = false
+    invulnerableTimer = 0
+    
+
     -- Configurações da nave
     acceleration = 100
     friction = 0.98
@@ -103,13 +109,13 @@ function love.update(dt)
 
         if love.keyboard.isDown("space") or isShooting then
             if timeSinceLastShot <= 0 then
-            shootBullet()
-            timeSinceLastShot = shootCooldown
+                shootBullet()
+                timeSinceLastShot = shootCooldown
             end
         end
+
         -- Atualizar movimento da nave
         updateNave(dt)
-
         -- Atualizar tiros
         updateBullets(dt)
 
@@ -120,8 +126,17 @@ function love.update(dt)
         updateAsteroids(dt)
         checkBulletCollision()  -- Verifica colisão dos tiros com asteroides
         checkShipCollision()
+
+        -- Controle da invulnerabilidade
+        if invulnerable then
+            invulnerableTimer = invulnerableTimer - dt
+            if invulnerableTimer <= 0 then
+                invulnerable = false
+            end
+        end
     end
 end
+
 
 -- Lidar com entradas do teclado
 function love.keypressed(key)
@@ -320,22 +335,30 @@ end
 
 
 function checkShipCollision()
-    for _, asteroid in ipairs(asteroids) do
-        local distance = math.sqrt((nave.x - asteroid.x)^2 + (nave.y - asteroid.y)^2)
-        if distance < asteroid.size / 2 then
-            vidaPerdida:play()
+    if not invulnerable then
+        for _, asteroid in ipairs(asteroids) do
+            local distance = math.sqrt((nave.x - asteroid.x)^2 + (nave.y - asteroid.y)^2)
+            if distance < asteroid.size / 2 then
+                vidaPerdida:play()
 
-            lives = lives - 1
-            nave.x, nave.y = love.graphics.getWidth()/2, love.graphics.getHeight()/2  -- Resetar nave ao centro
-            nave.speed = 0
+                lives = lives - 1
+                nave.x, nave.y = love.graphics.getWidth()/2, love.graphics.getHeight()/2  -- Resetar nave ao centro
+                nave.speed = 0
 
-            if lives <= 0 then
-                gameOver:play()
-                gameState = "gameover"
+                -- Ativar invulnerabilidade
+                invulnerable = true
+                invulnerableTimer = invulnerabilityTime
+
+                if lives <= 0 then
+                    gameOver:play()
+                    gameState = "gameover"
+                end
+                break
             end
         end
     end
 end
+
 
 
 
