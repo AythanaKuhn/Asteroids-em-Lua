@@ -14,10 +14,8 @@ function love.load()
     heart = love.graphics.newImage("imagens/vida.png")
 
     -- Carregar Sons
-    laser = love.audio.newSource("sons/laser.mp3","static")
-    laser:setPitch(1.8)
-    explosaoGrande = love.audio.newSource("sons/explosaoGrande.mp3","static")
-    explosaoPequena = love.audio.newSource("sons/explosaoPequena.mp3","static")
+    laser = love.audio.newSource("sons/laser.wav","static")
+    explosao = love.audio.newSource("sons/explosao.wav","static")
     vidaPerdida = love.audio.newSource("sons/vidaPerdida.mp3","static")
     gameOver = love.audio.newSource("sons/gameOver.wav","static")
 
@@ -269,7 +267,7 @@ function checkBulletCollision()
             local distance = math.sqrt((bullet.x - asteroid.x)^2 + (bullet.y - asteroid.y)^2)
             if distance < asteroid.size / 2 then
 
-                explosaoPequena:play()
+                explosao:play()
                 -- Adicionar pontuação de acordo com o tamanho do asteroide
                 if asteroid.size == 120 then
                     score = score + 20
