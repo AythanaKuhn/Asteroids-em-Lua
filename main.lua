@@ -1,3 +1,9 @@
+nave = require "src/nave"
+asteroides = require "src/asteroides"
+controle = require "src/controle"
+colisoes = require "src/colisoes" 
+tiros = require "src/tiros"
+
 -- Carregar recursos e iniciar variáveis
 function love.load()
     -- Estado do jogo
@@ -29,12 +35,12 @@ function love.load()
     
 
     -- Configurações da nave
-    acceleration = 100
+    acceleration = 200
     friction = 0.99
 
     -- Configurações dos tiros
     bullets = {}
-    bulletSpeed = 300
+    bulletSpeed = 600
 
     -- Configurações dos asteroides
     asteroids = {}
@@ -125,9 +131,9 @@ function love.update(dt)
 
         -- Atualizar asteroides
         updateAsteroids(dt)
-        updateNave(dt)
-        updateBullets(dt)
-        updateAsteroids(dt)
+  --      updateNave(dt)
+  --      updateBullets(dt)
+  --      updateAsteroids(dt)
         checkBulletCollision()  -- Verifica colisão dos tiros com asteroides
         checkShipCollision()
 
@@ -405,7 +411,7 @@ end
 
 function spawnNewAsteroid()
     local newSize = math.random(1, 2) == 1 and 120 or 60
-    local corner = math.random(1, 4)  
+    local corner = math.random(1, 4)  -- Escolhe um dos 4 cantos da tela
 
     local x, y
 
