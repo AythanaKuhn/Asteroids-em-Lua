@@ -30,7 +30,7 @@ function love.load()
 
     -- Configurações da nave
     acceleration = 100
-    friction = 0.98
+    friction = 0.99
 
     -- Configurações dos tiros
     bullets = {}
@@ -405,7 +405,7 @@ end
 
 function spawnNewAsteroid()
     local newSize = math.random(1, 2) == 1 and 120 or 60
-    local corner = math.random(1, 4)  -- Escolhe um dos 4 cantos da tela
+    local corner = math.random(1, 4)  
 
     local x, y
 
