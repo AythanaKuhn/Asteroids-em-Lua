@@ -124,17 +124,11 @@ function love.update(dt)
             end
         end
 
-        -- Atualizar movimento da nave
+        -- Atualizações
         updateNave(dt)
-        -- Atualizar tiros
         updateBullets(dt)
-
-        -- Atualizar asteroides
         updateAsteroids(dt)
-  --      updateNave(dt)
-  --      updateBullets(dt)
-  --      updateAsteroids(dt)
-        checkBulletCollision()  -- Verifica colisão dos tiros com asteroides
+        checkBulletCollision() 
         checkShipCollision()
 
         -- Controle da invulnerabilidade
